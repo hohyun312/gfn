@@ -81,12 +81,15 @@ def print_eval(model, env, n_iters=200):
             if not d["non_terminal"]
         ]
     )
-    print("Reward distribution   :", (rew / rew.sum()).round(3))
+    rew_dist = rew / rew.sum() 
+    print("Reward distribution   :", rew_dist.round(3))
 
     k = sorted(counter)
     bins = np.array([counter[i] for i in k])
-    print("Policy visit frequency:", (bins / bins.sum()).round(3))
+    emp_dist = bins / bins.sum()
+    print("Policy visit frequency:", emp_dist.round(3))
 
+    print("Empirical L1 error:", np.linalg.norm(rew_dist - emp_dist, ord=1))
     print("Learned log Z :", model.logZ.item())
     print("Sum of Rewards:", np.log(rew.sum()))
 
