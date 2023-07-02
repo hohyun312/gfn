@@ -118,19 +118,17 @@ class GraphStates:
         r"""Return a boolean tensor of shape=(*batch_shape,),
         where True means that the state is $s_0$ of the DAG.
         """
-        source_states_tensor = self.__class__.s0.repeat(
-            *self.batch_shape, *((1,) * len(self.__class__.state_shape))
-        )
-        return self.compare(source_states_tensor)
+        s0_states = [copy.deepcopy(self.__class__.s0) for _ in range(len(self))]
+        source_states = GraphStates(gd.Batch.from_data_list(s0_states))
+        return self.compare(source_states)
 
     @property
     def is_sink_state(self) -> DonesTensor:
         r"""Return a boolean tensor of shape=(*batch_shape,),
         where True means that the state is $s_f$ of the DAG.
         """
-        sink_states = self.__class__.sf.repeat(
-            *self.batch_shape, *((1,) * len(self.__class__.state_shape))
-        )
+        sf_states = [copy.deepcopy(self.__class__.sf) for _ in range(len(self))]
+        sink_states = GraphStates(gd.Batch.from_data_list(sf_states))
         return self.compare(sink_states)
 
     @property
