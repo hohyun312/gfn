@@ -3,12 +3,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Sequence
 
 if TYPE_CHECKING:
-    from gfn.envs import Env
+    from src.envs import Env
     from src.containers.numpy_states import NumpyStates
 
 import numpy as np
-
-# from gfn.containers.transitions import Transitions
 
 
 class Trajectories:
@@ -217,18 +215,18 @@ class Trajectories:
             is_backward=False,
         )
 
-    def to_transitions(self) -> Transitions:
+    def to_transitions(self):
         """Returns a `Transitions` object from the trajectories"""
         raise NotImplementedError()
 
-    def to_states(self) -> States:
+    def to_states(self) -> NumpyStates:
         """Returns a `States` object from the trajectories, containing all states in the trajectories"""
         states = self.states.flatten()
         return states[~states.is_sink_state]
 
     def to_non_initial_intermediary_and_terminating_states(
         self,
-    ) -> tuple[States, States]:
+    ) -> tuple[NumpyStates, NumpyStates]:
         """Returns a tuple of `States` objects from the trajectories, containing all non-initial intermediary and all terminating states in the trajectories
 
         Returns:

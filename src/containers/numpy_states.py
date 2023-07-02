@@ -1,15 +1,14 @@
 from __future__ import annotations
 
-import copy
 from math import prod
-from typing import ClassVar, Sequence
+from typing import ClassVar, Sequence, Any
 import numpy as np
 
 
 class NumpyStates:
     state_shape: ClassVar[tuple[int, ...]] = (1,)  # Shape of one state
-    s0: ClassVar[np.ndarray] = np.zeros(4)  # Source state of the DAG
-    sf: ClassVar[np.ndarray] = np.ones(4)  # Dummy state, used to pad a batch of states
+    s0: ClassVar[Any] = np.zeros(4)  # Source state of the DAG
+    sf: ClassVar[Any] = np.ones(4)  # Dummy state, used to pad a batch of states
 
     def __init__(self, states_array: np.ndarray):
         self.states_array = states_array
@@ -31,7 +30,7 @@ class NumpyStates:
         else:
             states_array = cls.make_initial_states_array(batch_shape)
 
-        return NumpyStates(states_array)
+        return cls(states_array)
 
     @classmethod
     def make_initial_states_array(cls, batch_shape: tuple[int, ...]) -> np.ndarray:
@@ -188,3 +187,13 @@ if __name__ == "__main__":
 
     states = NumpyStates.from_batch_shape((3, 4))
     assert states.is_initial_state.all() == True
+
+    class StrStates(NumpyStates):
+        state_shape = (1,)
+        s0 = "env.s0"
+        sf = "env.sf"
+
+    assert (
+        str(StrStates.from_batch_shape((3, 4)))
+        == "StrStates object of batch shape (3, 4) and state shape (1,)"
+    )
