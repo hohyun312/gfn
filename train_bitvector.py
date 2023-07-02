@@ -1,7 +1,7 @@
 import torch
 from tqdm import tqdm
 
-from src.bitvector import BitVector
+from src.envs.bitvector import BitVector
 from gfn import LogitPBEstimator, LogitPFEstimator, LogZEstimator
 from gfn.losses import TBParametrization, TrajectoryBalance
 from gfn.samplers import DiscreteActionsSampler, TrajectoriesSampler
