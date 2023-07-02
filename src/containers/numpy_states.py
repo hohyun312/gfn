@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import copy
 from math import prod
-from typing import ClassVar
+from typing import ClassVar, Sequence
 import numpy as np
 
 
@@ -51,9 +51,18 @@ class NumpyStates:
     def __repr__(self):
         return f"{self.__class__.__name__} object of batch shape {self.batch_shape} and state shape {self.state_shape}"
 
-    def __getitem__(self, index) -> NumpyStates:
+    def __getitem__(self, index: int | Sequence[int]) -> NumpyStates:
         """Access particular states of the batch."""
+        if isinstance(index, int):
+            index = [index]
         states = self.states_array[index]
+        return self.__class__(states)
+
+    def flatten(self) -> NumpyStates:
+        """Flatten the batch dimension of the states.
+        This is useful for example when extracting individual states from trajectories.
+        """
+        states = self.states_array.reshape(-1, *self.state_shape)
         return self.__class__(states)
 
     def extend(self, other: NumpyStates) -> None:
