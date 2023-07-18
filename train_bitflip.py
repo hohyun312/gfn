@@ -1,7 +1,7 @@
 import torch
 from tqdm import tqdm
 
-from src.envs.bitvector import BitVector
+from src.envs.bitflip import BitFlipEnv
 from gfn import LogitPBEstimator, LogitPFEstimator, LogZEstimator
 from gfn.losses import TBParametrization, TrajectoryBalance
 from gfn.samplers import DiscreteActionsSampler, TrajectoriesSampler
@@ -39,7 +39,7 @@ def print_evaluate():
 
 if __name__ == "__main__":
     device_str = "cuda" if torch.cuda.is_available() else "cpu"
-    env = BitVector(length=4, device_str=device_str)
+    env = BitFlipEnv(length=4, device_str=device_str)
 
     logit_PF = LogitPFEstimator(env=env, module_name="NeuralNet")
     logit_PB = LogitPBEstimator(
